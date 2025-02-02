@@ -83,7 +83,7 @@ class Application(ctk.CTk):
     def show_contact_info(self):
         contact_info = (
             "For support, please contact:"
-            "Email: Matias.Turpeinen@outlook.com"
+            "Email:"
         )
         messagebox.showinfo("Contact Information", contact_info)
 
