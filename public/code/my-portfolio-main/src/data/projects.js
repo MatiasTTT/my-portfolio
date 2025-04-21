@@ -3,19 +3,18 @@
 export const projects = [
 	{
 	  id: 1,
-	  name: 'Automated Order Tracking App',
+	  name: 'PDF_to_Excel',
 	  baseDir: 'PDF_to_Excel', // folder under /public/code/
 	  githubUrl:
 		'https://github.com/MatiasTTT/My-projects/tree/main/PDF_to_Excel',
-	  files: ['README.txt', 'gui.py', 'logic.py', 'main.py', 'phase1.py', 'phase2.py',],
+	  files: ['gui.py', 'logic.py', 'main.py', 'phase1.py', 'phase2.py'],
 	},
 	{
 	  id: 2,
-	  name: 'Basic HTML & CSS Website',
+	  name: 'Website',
 	  baseDir: 'Website', // exact folder name
 	  githubUrl: 'https://github.com/MatiasTTT/My-projects/tree/main/Website',
 	  files: [
-		'README.txt',
 		'about.html',
 		'blog.html',
 		'contact.html',
@@ -26,11 +25,10 @@ export const projects = [
 	},
 	{
 	  id: 3,
-	  name: 'Personal Portfolio Website',
+	  name: 'This portfolio website',
 	  baseDir: 'my-portfolio-main',
 	  githubUrl: 'https://github.com/MatiasTTT/my-portfolio',
 	  files: [
-		'README.txt',
 		'index.html',
 		'package.json',
 		'package-lock.json',

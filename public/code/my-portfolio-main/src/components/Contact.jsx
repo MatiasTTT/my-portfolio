@@ -3,7 +3,7 @@ import React from 'react';
 const Contact = () => {
   return (
     <div className="mt-8 text-center">
-      <h2 className="text-lg font-semibold mb-4">Connect with me</h2>
+      <h2 className="text-lg font-semibold mb-4">Connect with Me</h2>
       <div className="flex justify-center space-x-4">
         <a href="mailto:matias.tyot@gmail.com" className="hover:text-blue-400">
           Email
