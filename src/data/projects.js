@@ -7,7 +7,7 @@ export const projects = [
 	  baseDir: 'PDF_to_Excel',
 	  githubUrl:
 		'https://github.com/MatiasTTT/My-projects/tree/main/PDF_to_Excel',
-	  files: ['gui.py', 'logic.py', 'main.py', 'phase1.py', 'phase2.py'],
+	  files: ['README.txt', 'gui.py', 'logic.py', 'main.py', 'phase1.py', 'phase2.py',],
 	},
 	{
 	  id: 2,
@@ -15,6 +15,7 @@ export const projects = [
 	  baseDir: 'Website',
 	  githubUrl: 'https://github.com/MatiasTTT/My-projects/tree/main/Website',
 	  files: [
+		'README.txt',
 		'about.html',
 		'blog.html',
 		'contact.html',
@@ -29,6 +30,7 @@ export const projects = [
 	  baseDir: 'my-portfolio-main',
 	  githubUrl: 'https://github.com/MatiasTTT/my-portfolio',
 	  files: [
+		'README.txt',
 		'index.html',
 		'package.json',
 		'package-lock.json',
