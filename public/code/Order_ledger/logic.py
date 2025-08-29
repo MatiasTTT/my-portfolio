@@ -71,26 +71,10 @@ def extract_item_info(doc, page_num, item_rect, box_definitions, po_number, dest
 
 def determine_destination(destination_text):
     destination_text_lower = destination_text.lower()
-    if "india" in destination_text_lower:
-        return "India"
-    elif "china" in destination_text_lower:
-        return "China"
-    elif "hankkion" in destination_text_lower:
-        return "Etu"
-    elif "crusher" in destination_text_lower:
-        return "Mob"
-    elif "scm" in destination_text_lower:
-        return "SCM"
-    elif "holtum noordweg 5" in destination_text_lower:
-        return "HO5"
-    elif "holtum noordweg 11" in destination_text_lower:
-        return "HO11"
-    elif "helsinki" in destination_text_lower:
-        return "VA"
-    elif "huko" in destination_text_lower:
-        return "Lokomo"
-    elif "urusvuorenkatu 5" in destination_text_lower:
-        return "Turku"         
+    if "example1" in destination_text_lower:
+        return "Example1"
+    elif "example2" in destination_text_lower:
+        return "Example2"       
     else:
         return "Unknown"
 

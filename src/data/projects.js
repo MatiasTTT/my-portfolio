@@ -3,30 +3,50 @@
 export const projects = [
 	{
 	  id: 1,
-	  name: 'PDF Data Extractor',
-	  baseDir: 'PDF_to_Excel',
+	  name: 'Simple Order Ledger',
+	  baseDir: 'Order_ledger',
 	  githubUrl:
-		'https://github.com/MatiasTTT/My-projects/tree/main/PDF_to_Excel',
-	  files: ['README.txt', 'gui.py', 'logic.py', 'main.py', 'phase1.py', 'phase2.py',],
+		'https://github.com/MatiasTTT/Simple-Order-Ledger/tree/main/Order_ledger',
+	  files: [
+		'README.txt',
+		'gui.py',
+		'logic.py',
+		'main.py',
+		'phase1.py',
+		'phase2.py',
+		'updates/2025/README.txt',
+		'updates/2025/updated_extraction_logic.py',
+	  ],
 	},
 	{
 	  id: 2,
+	  name: 'PDF Data Extractor',
+	  baseDir: 'PDF_data_extractor',
+	  githubUrl:
+		'https://github.com/MatiasTTT/PDF-Data-Extractor/tree/main/PDF_data_extractor',
+	  files: [
+		'README.txt',
+		'PDF_Data_Extractor.py',
+	  ],
+	},
+	{
+	  id: 3,
 	  name: 'Simple HTML Website',
-	  baseDir: 'Website',
-	  githubUrl: 'https://github.com/MatiasTTT/My-projects/tree/main/Website',
+	  baseDir: 'Simple_Website',
+	  githubUrl: 'https://github.com/MatiasTTT/Simple-HTML-Website/tree/main/Simple_Website',
 	  files: [
 		'README.txt',
 		'about.html',
 		'blog.html',
 		'contact.html',
 		'index.html',
-		'services.html',
+		'Sservices.html',
 		'style.css',
 	  ],
 	},
 	{
-	  id: 3,
-	  name: 'This portfolio website',
+	  id: 4,
+	  name: 'My Personal Portfolio Website',
 	  baseDir: 'my-portfolio-main',
 	  githubUrl: 'https://github.com/MatiasTTT/my-portfolio',
 	  files: [
@@ -46,6 +66,36 @@ export const projects = [
 		'src/components/ProjectFolder.jsx',
 		'src/components/Sidebar.jsx',
 		'src/data/projects.js',
+	  ],
+	},
+	{
+	  id: 5,
+	  name: 'Email Workflow Automation Tool',
+	  baseDir: 'Email_PDF_automation',
+	  githubUrl: 'https://github.com/MatiasTTT/Email-Workflow-Automation-Tool/tree/main/Email_PDF_automation',
+	  files: [
+		'README.txt',
+		'OutlookTool1.py',
+	  ],
+	},
+	{
+	  id: 6,
+	  name: 'PDF Attachment Downloader',
+	  baseDir: 'PDF_attachment_downloader',
+	  githubUrl: 'https://github.com/MatiasTTT/PDF-Attachment-Downloader/tree/main/PDF_attachment_downloader',
+	  files: [
+		'README.txt',
+		'OutlookTool2.py',
+	  ],
+	},
+	{
+	  id: 7,
+	  name: 'Simple file viewer',
+	  baseDir: 'File_viewer',
+	  githubUrl: 'https://github.com/MatiasTTT/Simple-file-viewer/tree/main/File_viewer',
+	  files: [
+		'README.txt',
+		'FileViewer.py',
 	  ],
 	},
 	// ➜ Add new projects by dropping a folder in /public/code/
