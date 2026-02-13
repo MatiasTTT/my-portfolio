@@ -53,8 +53,6 @@ export const projects = [
 		'README.txt',
 		'index.html',
 		'package.json',
-		'package-lock.json',
-		'postcss.config.js',
 		'tailwind.config.js',
 		'vite.config.js',
 		'src/App.jsx',

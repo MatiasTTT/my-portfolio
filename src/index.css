@@ -1,3 +1,176 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #e5e7eb;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.14), transparent 32%),
+    radial-gradient(circle at 82% 3%, rgba(255, 255, 255, 0.08), transparent 26%),
+    radial-gradient(circle at 50% 115%, rgba(255, 255, 255, 0.08), transparent 44%),
+    linear-gradient(145deg, #020203 0%, #0a0b0d 52%, #030305 100%);
+  background-attachment: fixed;
+}
+
+.black-pearl-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.black-pearl-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.35;
+  background:
+    linear-gradient(122deg, rgba(255, 255, 255, 0.08), transparent 36%),
+    linear-gradient(298deg, rgba(255, 255, 255, 0.06), transparent 34%);
+}
+
+.pearl-panel {
+  background: linear-gradient(165deg, rgba(38, 38, 40, 0.52), rgba(10, 10, 12, 0.42));
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 1rem;
+  box-shadow:
+    0 24px 45px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+}
+
+.pearl-subpanel {
+  background: linear-gradient(160deg, rgba(34, 34, 36, 0.45), rgba(12, 12, 14, 0.34));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.95rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+.pearl-action {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #e5e7eb;
+  background: rgba(7, 7, 8, 0.45);
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.pearl-action:hover {
+  color: #fafafa;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .pearl-panel {
+    background: rgba(20, 20, 22, 0.9);
+  }
+
+  .pearl-subpanel {
+    background: rgba(20, 20, 22, 0.8);
+  }
+}
+
+.project-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(228, 228, 231, 0.4) rgba(255, 255, 255, 0.04);
+}
+
+.project-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.project-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+}
+
+.project-scroll::-webkit-scrollbar-thumb {
+  background: rgba(228, 228, 231, 0.38);
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+}
+
+.project-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 250, 250, 0.55);
+}
+
+.file-code-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 212, 216, 0.36) rgba(255, 255, 255, 0.04);
+}
+
+.file-code-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.file-code-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.file-code-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 212, 216, 0.34);
+  border: 2px solid rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+}
+
+.file-code-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 250, 250, 0.52);
+}
+
+.file-code-scroll code[class*='language-'],
+.file-code-scroll pre[class*='language-'] {
+  color: #e5e7eb;
+  text-shadow: none;
+  background: transparent;
+}
+
+.file-code-scroll .token.comment,
+.file-code-scroll .token.prolog,
+.file-code-scroll .token.doctype,
+.file-code-scroll .token.cdata {
+  color: #a1a1aa;
+}
+
+.file-code-scroll .token.punctuation,
+.file-code-scroll .token.operator {
+  color: #d4d4d8;
+}
+
+.file-code-scroll .token.property,
+.file-code-scroll .token.tag,
+.file-code-scroll .token.boolean,
+.file-code-scroll .token.number,
+.file-code-scroll .token.constant,
+.file-code-scroll .token.symbol,
+.file-code-scroll .token.deleted {
+  color: #f5f5f5;
+}
+
+.file-code-scroll .token.selector,
+.file-code-scroll .token.attr-name,
+.file-code-scroll .token.string,
+.file-code-scroll .token.char,
+.file-code-scroll .token.builtin,
+.file-code-scroll .token.inserted {
+  color: #e4e4e7;
+}
+
+.file-code-scroll .token.atrule,
+.file-code-scroll .token.attr-value,
+.file-code-scroll .token.keyword {
+  color: #d4d4d8;
+}
+
+.file-code-scroll .token.function,
+.file-code-scroll .token.class-name {
+  color: #f4f4f5;
+}
