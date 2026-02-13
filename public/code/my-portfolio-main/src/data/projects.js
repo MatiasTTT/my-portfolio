@@ -40,7 +40,7 @@ export const projects = [
 		'blog.html',
 		'contact.html',
 		'index.html',
-		'Sservices.html',
+		'services.html',
 		'style.css',
 	  ],
 	},

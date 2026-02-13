@@ -39,7 +39,7 @@ export default function FileViewer({ file, project, onClose }) {
 
   // ========= render =========
   return (
-    <div className="pearl-panel w-full overflow-hidden min-w-0 p-4">
+    <div className="pearl-panel w-full h-full overflow-hidden min-w-0 p-4 flex flex-col">
       {/* header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pb-3 border-b border-white/10">
         <div className="min-w-0">
@@ -70,13 +70,13 @@ export default function FileViewer({ file, project, onClose }) {
       </div>
 
       {/* code block */}
-      <div className="file-code-scroll mt-3 rounded-lg border border-white/10 bg-black/30 overflow-auto max-h-[calc(100vh-220px)]">
+      <div className="file-code-scroll mt-3 rounded-lg border border-white/10 bg-black/30 overflow-auto flex-1 min-h-0">
         {language === 'none' ? (
-          <pre className="m-0 p-4 text-sm leading-6 text-gray-200">
+          <pre className="m-0 p-4 text-base leading-6 text-gray-200">
             <code ref={codeRef}>{code}</code>
           </pre>
         ) : (
-          <pre className={`language-${language} m-0 p-4 text-sm leading-6`}>
+          <pre className={`language-${language} m-0 p-4 text-base leading-6`}>
             <code ref={codeRef} className={`language-${language}`}>
               {code}
             </code>
@@ -86,3 +86,4 @@ export default function FileViewer({ file, project, onClose }) {
     </div>
   );
 }
+

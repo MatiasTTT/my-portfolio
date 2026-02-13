@@ -23,20 +23,22 @@ const App = () => {
   return (
     <div className="black-pearl-bg min-h-screen flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 text-gray-100">
       {/* Left Sidebar */}
-      <aside className="md:w-1/3 lg:w-1/4 pearl-panel p-4 flex flex-col justify-between">
-        {/* Profile section at the top */}
-        <Profile />
+      <aside className="md:w-1/3 lg:w-1/4 pearl-panel p-4 md:sticky md:top-4 md:h-[calc(100vh-2rem)] md:self-start">
+        <div className="md:h-full md:pr-1 flex flex-col gap-6">
+          {/* Profile section at the top */}
+          <Profile />
 
-        {/* Project folders and socials pushed further toward the bottom */}
-        <div className="pt-6">
-          <Sidebar projects={projects} onFileSelect={handleFileSelect} />
-          <Contact />
+          {/* Project folders and socials with matching spacing */}
+          <div className="flex-1 min-h-0 flex flex-col gap-6">
+            <Sidebar projects={projects} onFileSelect={handleFileSelect} />
+            <Contact />
+          </div>
         </div>
       </aside>
 
       {/* Right Section - File Viewer */}
       <main className="flex-1 p-1 md:p-0 min-w-0">
-        <div className="md:sticky md:top-4">
+        <div className="md:sticky md:top-4 md:h-[calc(100vh-2rem)]">
           {selectedFile ? (
             <FileViewer
               file={selectedFile}
@@ -44,9 +46,9 @@ const App = () => {
               onClose={handleFileClose}
             />
           ) : (
-            <div className="pearl-panel min-h-[320px] md:min-h-[420px] flex items-center justify-center text-center p-6">
+            <div className="pearl-panel min-h-[320px] md:h-full flex items-center justify-center text-center p-6">
               <p className="text-lg text-gray-300">
-                Please select a file from the project folder on the left-hand side to view its contents.
+                Please select a file from the project folder to view its contents.
               </p>
             </div>
           )}
@@ -57,3 +59,4 @@ const App = () => {
 };
 
 export default App;
+

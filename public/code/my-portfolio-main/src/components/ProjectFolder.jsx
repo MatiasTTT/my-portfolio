@@ -26,10 +26,10 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
   if (node._isFile) {
     return (
       <li
-        className="flex items-center cursor-pointer hover:text-blue-400"
+        className="group flex items-center rounded-md px-2 py-1.5 cursor-pointer text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
         onClick={() => onSelect(fullPath)}
       >
-        <FiFile className="mr-2" />
+        <FiFile className="mr-2 text-gray-400 group-hover:text-gray-100" />
         <span>{name}</span>
       </li>
     );
@@ -39,11 +39,13 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
   return (
     <li>
       <div
-        className="flex items-center cursor-pointer select-none hover:text-blue-400"
+        className="group flex items-center rounded-md px-2 py-1.5 cursor-pointer select-none text-gray-200 hover:bg-white/10 hover:text-white transition-colors"
         onClick={() => setOpen((o) => !o)}
       >
-        <div className="mr-2">{open ? <FiFolderMinus /> : <FiFolderPlus />}</div>
-        <span className="font-medium">{name}</span>
+        <div className="mr-2 text-gray-400 group-hover:text-gray-100">
+          {open ? <FiFolderMinus /> : <FiFolderPlus />}
+        </div>
+        <span className="text-sm font-medium">{name}</span>
       </div>
 
       <AnimatePresence initial={false}>
@@ -52,7 +54,7 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="pl-6 space-y-1 overflow-hidden"
+            className="pl-4 mt-1 space-y-1 overflow-hidden border-l border-white/10"
           >
             {Object.entries(node).map(
               ([child, sub]) =>
@@ -73,22 +75,29 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
   );
 };
 
-/* ---------- top‑level wrapper ---------- */
+/* ---------- top-level wrapper ---------- */
 const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
   const tree = useMemo(() => buildTree(project.files), [project.files]);
 
   return (
-    <div className="bg-lightgray rounded-md p-2 transition-colors">
+    <div
+      className={`group rounded-lg border transition-colors ${
+        isOpen
+          ? 'border-white/30 bg-white/10'
+          : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20'
+      }`}
+    >
       {/* project header */}
-      <div
-        className="flex items-center cursor-pointer select-none"
+      <button
+        type="button"
+        className="w-full flex items-center cursor-pointer select-none px-3 py-2 text-left"
         onClick={onToggle}
       >
-        <div className="mr-2">
+        <div className="mr-2 text-gray-400 group-hover:text-gray-100">
           {isOpen ? <FiFolderMinus /> : <FiFolderPlus />}
         </div>
-        <span className="font-medium">{project.name}</span>
-      </div>
+        <span className="font-semibold text-gray-100">{project.name}</span>
+      </button>
 
       {/* tree */}
       <AnimatePresence initial={false}>
@@ -97,7 +106,7 @@ const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="mt-2 pl-4 overflow-hidden space-y-1"
+            className="mb-2 px-3 pb-2 overflow-hidden space-y-1 border-l-2 border-white/25 ml-3"
           >
             {Object.entries(tree).map(([k, v]) => (
               <Node

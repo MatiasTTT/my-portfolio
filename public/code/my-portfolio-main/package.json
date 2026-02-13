@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "homepage": "https://MatiasTTT.github.io/my-portfolio/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
