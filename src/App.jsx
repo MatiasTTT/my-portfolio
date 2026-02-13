@@ -23,13 +23,13 @@ const App = () => {
   return (
     <div className="black-pearl-bg min-h-screen flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 text-gray-100">
       {/* Left Sidebar */}
-      <aside className="md:w-1/3 lg:w-1/4 pearl-panel p-4 md:sticky md:top-4 md:h-[calc(100vh-2rem)] md:self-start">
-        <div className="md:h-full md:pr-1 flex flex-col gap-6">
+      <aside className="md:w-1/3 lg:w-1/4 pearl-panel p-4 md:sticky md:top-4 md:h-[calc(100vh-2rem)] md:self-start md:overflow-hidden">
+        <div className="left-panel-scroll md:h-full md:pr-1 flex flex-col gap-6">
           {/* Profile section at the top */}
           <Profile />
 
           {/* Project folders and socials with matching spacing */}
-          <div className="flex-1 min-h-0 flex flex-col gap-6">
+          <div className="left-panel-sections flex-1 min-h-0 flex flex-col gap-6">
             <Sidebar projects={projects} onFileSelect={handleFileSelect} />
             <Contact />
           </div>
