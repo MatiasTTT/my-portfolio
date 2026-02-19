@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ProjectFolder from './ProjectFolder';
 
-const Sidebar = ({ projects, onFileSelect }) => {
+const Sidebar = ({ projects, onFileSelect, className = '' }) => {
   const [openProjectIds, setOpenProjectIds] = useState(new Set());
   const projectCount = projects.length;
 
@@ -18,7 +18,9 @@ const Sidebar = ({ projects, onFileSelect }) => {
   };
 
   return (
-    <div className="pearl-subpanel p-3 h-[20rem] md:h-[clamp(18rem,42vh,26rem)] flex flex-col min-h-0">
+    <div
+      className={`pearl-subpanel p-3 h-[20rem] md:h-[clamp(18rem,42vh,26rem)] flex flex-col min-h-0 ${className}`}
+    >
       <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
         <h2 className="text-lg font-semibold tracking-wide text-gray-100">Projects</h2>
         <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-white/10 border border-white/20 text-gray-100">

@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Contact = () => {
+const Contact = ({ className = '' }) => {
   return (
-    <div className="text-center pearl-subpanel p-4">
+    <div className={`text-center pearl-subpanel p-4 flex flex-col justify-center ${className}`}>
       <h2 className="text-lg font-semibold mb-4 text-gray-100 tracking-wide">Connect with Me</h2>
       <div className="flex justify-center space-x-4">
         <a href="mailto:matias.tyot@gmail.com" className="text-gray-300 hover:text-gray-100 transition-colors">

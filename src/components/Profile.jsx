@@ -3,7 +3,7 @@ import profilePic from '../assets/profile.jpg'; // Replace with your profile ima
 
 const Profile = () => {
   return (
-    <div className="text-center pearl-subpanel p-4">
+    <div className="text-center">
       <img
         src={profilePic}
         alt="Profile"
