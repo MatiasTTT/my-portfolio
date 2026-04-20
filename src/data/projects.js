@@ -4,6 +4,8 @@ export const projects = [
 	{
 	  id: 1,
 	  name: 'Simple Order Ledger',
+	  createdYear: 2023,
+	  createdMonth: 3,
 	  baseDir: 'Order_ledger',
 	  githubUrl:
 		'https://github.com/MatiasTTT/Simple-Order-Ledger/tree/main/Order_ledger',
@@ -21,6 +23,8 @@ export const projects = [
 	{
 	  id: 2,
 	  name: 'PDF Data Extractor',
+	  createdYear: 2025,
+	  createdMonth: 7,
 	  baseDir: 'PDF_data_extractor',
 	  githubUrl:
 		'https://github.com/MatiasTTT/PDF-Data-Extractor/tree/main/PDF_data_extractor',
@@ -32,6 +36,8 @@ export const projects = [
 	{
 	  id: 3,
 	  name: 'Simple HTML Website',
+	  createdYear: 2020,
+	  createdMonth: 2,
 	  baseDir: 'Simple_Website',
 	  githubUrl: 'https://github.com/MatiasTTT/Simple-HTML-Website/tree/main/Simple_Website',
 	  files: [
@@ -47,6 +53,8 @@ export const projects = [
 	{
 	  id: 4,
 	  name: 'My Personal Portfolio Website',
+	  createdYear: 2025,
+	  createdMonth: 1,
 	  baseDir: 'my-portfolio-main',
 	  githubUrl: 'https://github.com/MatiasTTT/my-portfolio',
 	  files: [
@@ -69,6 +77,8 @@ export const projects = [
 	{
 	  id: 5,
 	  name: 'Email Workflow Automation Tool',
+	  createdYear: 2025,
+	  createdMonth: 8,
 	  baseDir: 'Email_PDF_automation',
 	  githubUrl: 'https://github.com/MatiasTTT/Email-Workflow-Automation-Tool/tree/main/Email_PDF_automation',
 	  files: [
@@ -79,6 +89,8 @@ export const projects = [
 	{
 	  id: 6,
 	  name: 'PDF Attachment Downloader',
+	  createdYear: 2025,
+	  createdMonth: 8,
 	  baseDir: 'PDF_attachment_downloader',
 	  githubUrl: 'https://github.com/MatiasTTT/PDF-Attachment-Downloader/tree/main/PDF_attachment_downloader',
 	  files: [
@@ -89,6 +101,8 @@ export const projects = [
 	{
 	  id: 7,
 	  name: 'Simple file viewer',
+	  createdYear: 2025,
+	  createdMonth: 7,
 	  baseDir: 'File_viewer',
 	  githubUrl: 'https://github.com/MatiasTTT/Simple-file-viewer/tree/main/File_viewer',
 	  files: [
@@ -97,6 +111,6 @@ export const projects = [
 	  ],
 	},
 	// ➜ Add new projects by dropping a folder in /public/code/
-	//     and listing its files here.
+	//     and listing its files here. Set createdYear and createdMonth to control sorting.
   ];
   
