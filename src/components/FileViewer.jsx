@@ -1,43 +1,77 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.css';
 import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-markup'; // html
+import 'prismjs/components/prism-markup';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-jsx';
-import { FiExternalLink, FiX } from 'react-icons/fi';
+import { loadCodeFile } from '../codeFiles';
+import { CloseIcon, ExternalLinkIcon } from './icons';
+
+const languagesByExtension = {
+  css: 'css',
+  html: 'markup',
+  js: 'javascript',
+  jsx: 'jsx',
+  py: 'python',
+};
 
 export default function FileViewer({ file, project, onClose }) {
   const [code, setCode] = useState('');
-  const codeRef = useRef(null);
-
-  // ========= helpers =========
+  const [highlightedCode, setHighlightedCode] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const ext = file.split('.').pop().toLowerCase();
-  const language =
-    { js: 'javascript', jsx: 'jsx', py: 'python', html: 'markup', css: 'css' }[
-      ext
-    ] || 'none';
+  const language = languagesByExtension[ext] || 'none';
 
-  // ========= fetch the raw file when file/project changes =========
   useEffect(() => {
-    if (!file || !project) return;
-    const url = `${import.meta.env.BASE_URL}code/${project.baseDir}/${file}`;
-    fetch(url)
-      .then((r) => r.text())
-      .then(setCode)
-      .catch((e) =>
-        setCode(`// failed to load ${url}\n// ${e.message || e.toString()}`)
-      );
+    let isCurrent = true;
+
+    loadCodeFile(project, file)
+      .then((text) => {
+        if (isCurrent) setCode(text);
+      })
+      .catch((error) => {
+        if (isCurrent) {
+          setCode(`// failed to load file\n// ${error.message || error.toString()}`);
+        }
+      })
+      .finally(() => {
+        if (isCurrent) setIsLoading(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
   }, [file, project]);
 
-  // highlight when code or language changes
-  useEffect(() => {
-    if (codeRef.current && language !== 'none') {
-      Prism.highlightElement(codeRef.current);
-    }
-  }, [code, language]);
+  const grammar = useMemo(() => Prism.languages[language], [language]);
 
-  // ========= render =========
+  useEffect(() => {
+    if (!grammar || !code) {
+      setHighlightedCode('');
+      return undefined;
+    }
+
+    const highlight = () => {
+      setHighlightedCode(Prism.highlight(code, grammar, language));
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleCallbackId = window.requestIdleCallback(highlight, { timeout: 100 });
+      return () => window.cancelIdleCallback(idleCallbackId);
+    }
+
+    const timeoutId = window.setTimeout(highlight, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [code, grammar, language]);
+
+  const displayedCode = useMemo(() => {
+    if (isLoading) return 'Loading file...';
+    return code;
+  }, [code, isLoading]);
+
+  const highlightedMarkup = grammar && highlightedCode ? highlightedCode : null;
+
   return (
     <div className="pearl-panel w-full h-full overflow-hidden min-w-0 p-4 flex flex-col">
       {/* header */}
@@ -55,7 +89,7 @@ export default function FileViewer({ file, project, onClose }) {
               rel="noopener noreferrer"
               className="pearl-action inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md"
             >
-              GitHub <FiExternalLink />
+              GitHub <ExternalLinkIcon />
             </a>
           )}
           <button
@@ -64,7 +98,7 @@ export default function FileViewer({ file, project, onClose }) {
             className="pearl-action inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md"
             aria-label="Close file viewer"
           >
-            Close <FiX />
+            Close <CloseIcon />
           </button>
         </div>
       </div>
@@ -73,13 +107,18 @@ export default function FileViewer({ file, project, onClose }) {
       <div className="file-code-scroll mt-3 rounded-lg border border-white/10 bg-black/30 overflow-auto flex-1 min-h-0">
         {language === 'none' ? (
           <pre className="m-0 p-4 text-base leading-6 text-gray-200">
-            <code ref={codeRef}>{code}</code>
+            <code>{displayedCode}</code>
           </pre>
         ) : (
           <pre className={`language-${language} m-0 p-4 text-base leading-6`}>
-            <code ref={codeRef} className={`language-${language}`}>
-              {code}
-            </code>
+            {highlightedMarkup ? (
+              <code
+                className={`language-${language}`}
+                dangerouslySetInnerHTML={{ __html: highlightedMarkup }}
+              />
+            ) : (
+              <code className={`language-${language}`}>{displayedCode}</code>
+            )}
           </pre>
         )}
       </div>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ProjectFolder from './ProjectFolder';
 
 const Sidebar = ({ projects, onFileSelect, className = '' }) => {
@@ -29,7 +29,7 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
     }, []);
   }, [projects]);
 
-  const handleFolderToggle = (projectId) => {
+  const handleFolderToggle = useCallback((projectId) => {
     setOpenProjectIds((prev) => {
       const next = new Set(prev);
       if (next.has(projectId)) {
@@ -39,7 +39,7 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
       }
       return next;
     });
-  };
+  }, []);
 
   return (
     <div
@@ -65,7 +65,7 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
                 key={project.id}
                 project={project}
                 isOpen={openProjectIds.has(project.id)}
-                onToggle={() => handleFolderToggle(project.id)}
+                onToggle={handleFolderToggle}
                 onFileSelect={onFileSelect}
               />
             ))}

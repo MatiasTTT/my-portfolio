@@ -1,6 +1,39 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiFolderPlus, FiFolderMinus, FiFile } from 'react-icons/fi';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { preloadCodeFile } from '../codeFiles';
+import { FileIcon, FolderMinusIcon, FolderPlusIcon } from './icons';
+
+const collapseDurationMs = 240;
+
+const Collapsible = ({ children, isOpen }) => {
+  const [isMounted, setIsMounted] = useState(isOpen);
+  const [isVisible, setIsVisible] = useState(isOpen);
+
+  useEffect(() => {
+    let frameId;
+    let timeoutId;
+
+    if (isOpen) {
+      setIsMounted(true);
+      frameId = requestAnimationFrame(() => setIsVisible(true));
+    } else {
+      setIsVisible(false);
+      timeoutId = window.setTimeout(() => setIsMounted(false), collapseDurationMs);
+    }
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
+    };
+  }, [isOpen]);
+
+  if (!isMounted) return null;
+
+  return (
+    <div className={`folder-reveal ${isVisible ? 'is-open' : ''}`}>
+      <div className="folder-reveal__inner">{children}</div>
+    </div>
+  );
+};
 
 /* ---------- helpers ---------- */
 function isReadmeFile(path) {
@@ -26,7 +59,7 @@ function buildTree(paths) {
 }
 
 /* ---------- recursive item ---------- */
-const Node = ({ name, node, pathSoFar, onSelect }) => {
+const Node = ({ name, node, pathSoFar, onPreload, onSelect }) => {
   const [open, setOpen] = useState(false);
   const fullPath = pathSoFar ? `${pathSoFar}/${name}` : name;
 
@@ -36,8 +69,10 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
       <li
         className="group flex min-w-0 items-center rounded-md px-2 py-1.5 cursor-pointer text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
         onClick={() => onSelect(fullPath)}
+        onPointerDown={() => onPreload(fullPath)}
+        onPointerEnter={() => onPreload(fullPath)}
       >
-        <FiFile className="mr-2 shrink-0 text-gray-400 group-hover:text-gray-100" />
+        <FileIcon className="mr-2 shrink-0 text-gray-400 group-hover:text-gray-100" />
         <span className="min-w-0 break-words">{name}</span>
       </li>
     );
@@ -51,34 +86,28 @@ const Node = ({ name, node, pathSoFar, onSelect }) => {
         onClick={() => setOpen((o) => !o)}
       >
         <div className="mr-2 shrink-0 text-gray-400 group-hover:text-gray-100">
-          {open ? <FiFolderMinus /> : <FiFolderPlus />}
+          {open ? <FolderMinusIcon /> : <FolderPlusIcon />}
         </div>
         <span className="min-w-0 break-words text-sm font-medium">{name}</span>
       </div>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.ul
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="pl-4 mt-1 space-y-1 overflow-hidden border-l border-white/10"
-          >
-            {Object.entries(node).map(
-              ([child, sub]) =>
-                child !== '_isFile' && (
-                  <Node
-                    key={child}
-                    name={child}
-                    node={sub}
-                    pathSoFar={fullPath}
-                    onSelect={onSelect}
-                  />
-                )
-            )}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+      <Collapsible isOpen={open}>
+        <ul className="pl-4 mt-1 space-y-1 border-l border-white/10">
+          {Object.entries(node).map(
+            ([child, sub]) =>
+              child !== '_isFile' && (
+                <Node
+                  key={child}
+                  name={child}
+                  node={sub}
+                  pathSoFar={fullPath}
+                  onPreload={onPreload}
+                  onSelect={onSelect}
+                />
+              )
+          )}
+        </ul>
+      </Collapsible>
     </li>
   );
 };
@@ -106,6 +135,20 @@ const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
   const [summary, setSummary] = useState('');
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
   const [hasLoadedSummary, setHasLoadedSummary] = useState(false);
+  const handleFileSelect = useCallback(
+    (filePath) => onFileSelect(project, filePath),
+    [onFileSelect, project]
+  );
+  const handleFilePreload = useCallback(
+    (filePath) => preloadCodeFile(project, filePath),
+    [project]
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    visibleFiles.forEach(handleFilePreload);
+  }, [handleFilePreload, isOpen, visibleFiles]);
 
   useEffect(() => {
     if (!isOpen || hasLoadedSummary) return undefined;
@@ -149,40 +192,32 @@ const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
       <button
         type="button"
         className="w-full flex min-w-0 items-center cursor-pointer select-none px-3 py-2 text-left"
-        onClick={onToggle}
+        onClick={() => onToggle(project.id)}
+        aria-expanded={isOpen}
       >
         <div className="mr-2 shrink-0 text-gray-400 group-hover:text-gray-100">
-          {isOpen ? <FiFolderMinus /> : <FiFolderPlus />}
+          {isOpen ? <FolderMinusIcon /> : <FolderPlusIcon />}
         </div>
         <span className="min-w-0 break-words font-semibold text-gray-100">{project.name}</span>
       </button>
 
-      {/* tree */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
-          >
-            <ProjectSummary summary={summary} isLoading={isSummaryLoading} />
-            <ul className="mb-2 px-3 pb-2 space-y-1 border-l-2 border-white/25 ml-3">
-              {Object.entries(tree).map(([k, v]) => (
-                <Node
-                  key={k}
-                  name={k}
-                  node={v}
-                  pathSoFar=""
-                  onSelect={(filePath) => onFileSelect(project, filePath)}
-                />
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Collapsible isOpen={isOpen}>
+        <ProjectSummary summary={summary} isLoading={isSummaryLoading} />
+        <ul className="mb-2 px-3 pb-2 space-y-1 border-l-2 border-white/25 ml-3">
+          {Object.entries(tree).map(([k, v]) => (
+            <Node
+              key={k}
+              name={k}
+              node={v}
+              pathSoFar=""
+              onPreload={handleFilePreload}
+              onSelect={handleFileSelect}
+            />
+          ))}
+        </ul>
+      </Collapsible>
     </div>
   );
 };
 
-export default ProjectFolder;
+export default memo(ProjectFolder);

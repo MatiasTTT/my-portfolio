@@ -64,10 +64,12 @@ export const projects = [
 		'tailwind.config.js',
 		'vite.config.js',
 		'src/App.jsx',
+		'src/codeFiles.js',
 		'src/index.css',
 		'src/main.jsx',
 		'src/components/Contact.jsx',
 		'src/components/FileViewer.jsx',
+		'src/components/icons.jsx',
 		'src/components/Profile.jsx',
 		'src/components/ProjectFolder.jsx',
 		'src/components/Sidebar.jsx',
@@ -113,4 +115,3 @@ export const projects = [
 	// ➜ Add new projects by dropping a folder in /public/code/
 	//     and listing its files here. Set createdYear and createdMonth to control sorting.
   ];
-  

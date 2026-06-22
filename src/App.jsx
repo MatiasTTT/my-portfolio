@@ -1,26 +1,50 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
-import FileViewer from './components/FileViewer';
 import Profile from './components/Profile';
+import { preloadCodeFile } from './codeFiles';
 import { projects } from './data/projects';
 import emailIcon from './assets/email.svg';
 import githubIcon from './assets/github.svg';
 import linkedinIcon from './assets/linkedin.svg';
 
+const loadFileViewer = () => import('./components/FileViewer');
+const FileViewer = lazy(loadFileViewer);
+
+const FileViewerFallback = () => (
+  <div
+    aria-busy="true"
+    className="pearl-panel w-full h-full min-h-[320px]"
+  />
+);
+
 const App = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Callback when a file is selected from a project folder
-  const handleFileSelect = (project, file) => {
+  const handleFileSelect = useCallback((project, file) => {
+    preloadCodeFile(project, file);
     setSelectedProject(project);
     setSelectedFile(file);
-  };
+  }, []);
 
-  const handleFileClose = () => {
+  const handleFileClose = useCallback(() => {
     setSelectedFile(null);
     setSelectedProject(null);
-  };
+  }, []);
+
+  useEffect(() => {
+    const preload = () => {
+      loadFileViewer();
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleCallbackId = window.requestIdleCallback(preload, { timeout: 1500 });
+      return () => window.cancelIdleCallback(idleCallbackId);
+    }
+
+    const timeoutId = window.setTimeout(preload, 500);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   return (
     <div className="black-pearl-bg min-h-screen flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 text-gray-100">
@@ -33,11 +57,14 @@ const App = () => {
       <main className="flex-1 p-1 md:p-0 min-w-0">
         <div className="md:sticky md:top-4 md:h-[calc(100vh-2rem)]">
           {selectedFile ? (
-            <FileViewer
-              file={selectedFile}
-              project={selectedProject}
-              onClose={handleFileClose}
-            />
+            <Suspense fallback={<FileViewerFallback />}>
+              <FileViewer
+                key={`${selectedProject.id}:${selectedFile}`}
+                file={selectedFile}
+                project={selectedProject}
+                onClose={handleFileClose}
+              />
+            </Suspense>
           ) : (
             <div className="pearl-panel min-h-[320px] md:h-full p-4 md:p-5">
               <div className="h-full flex flex-col gap-4 md:gap-5">
