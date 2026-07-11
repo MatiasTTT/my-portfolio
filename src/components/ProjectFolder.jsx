@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { preloadCodeFile } from '../codeFiles';
+import { loadCodeFile, preloadCodeFile } from '../codeFiles';
 import { FileIcon, FolderMinusIcon, FolderPlusIcon } from './icons';
 
-const collapseDurationMs = 240;
+const collapseDurationMs = 180;
 
 const Collapsible = ({ children, isOpen }) => {
   const [isMounted, setIsMounted] = useState(isOpen);
@@ -38,10 +38,6 @@ const Collapsible = ({ children, isOpen }) => {
 /* ---------- helpers ---------- */
 function isReadmeFile(path) {
   return path.split('/').pop().toLowerCase() === 'readme.txt';
-}
-
-function encodePath(path) {
-  return path.split('/').map(encodeURIComponent).join('/');
 }
 
 function buildTree(paths) {
@@ -126,7 +122,7 @@ const ProjectSummary = ({ summary, isLoading }) => {
 };
 
 /* ---------- top-level wrapper ---------- */
-const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
+const ProjectFolder = ({ project, isOpen, onToggle, onFilePreload, onFileSelect }) => {
   const visibleFiles = useMemo(
     () => project.files.filter((file) => !isReadmeFile(file)),
     [project.files]
@@ -140,28 +136,20 @@ const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
     [onFileSelect, project]
   );
   const handleFilePreload = useCallback(
-    (filePath) => preloadCodeFile(project, filePath),
+    (filePath) => onFilePreload(project, filePath),
+    [onFilePreload, project]
+  );
+  const handleSummaryPreload = useCallback(
+    () => preloadCodeFile(project, 'README.txt'),
     [project]
   );
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    visibleFiles.forEach(handleFilePreload);
-  }, [handleFilePreload, isOpen, visibleFiles]);
 
   useEffect(() => {
     if (!isOpen || hasLoadedSummary) return undefined;
 
     let isCurrent = true;
-    const readmeUrl = `${import.meta.env.BASE_URL}code/${encodePath(project.baseDir)}/README.txt`;
-
     setIsSummaryLoading(true);
-    fetch(readmeUrl)
-      .then((response) => {
-        if (!response.ok) throw new Error(`Unable to load ${readmeUrl}`);
-        return response.text();
-      })
+    loadCodeFile(project, 'README.txt')
       .then((text) => {
         if (isCurrent) setSummary(text.trim());
       })
@@ -193,6 +181,9 @@ const ProjectFolder = ({ project, isOpen, onToggle, onFileSelect }) => {
         type="button"
         className="w-full flex min-w-0 items-center cursor-pointer select-none px-3 py-2 text-left"
         onClick={() => onToggle(project.id)}
+        onFocus={handleSummaryPreload}
+        onPointerDown={handleSummaryPreload}
+        onPointerEnter={handleSummaryPreload}
         aria-expanded={isOpen}
       >
         <div className="mr-2 shrink-0 text-gray-400 group-hover:text-gray-100">

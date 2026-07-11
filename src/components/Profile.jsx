@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import profile384Avif from '../assets/profile-384.avif';
 import profile384Jpg from '../assets/profile-384.jpg';
 import profile384Webp from '../assets/profile-384.webp';
@@ -42,5 +42,5 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default memo(Profile);
 

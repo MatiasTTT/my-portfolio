@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { preloadCodeFile } from '../codeFiles';
 import ProjectFolder from './ProjectFolder';
 
-const Sidebar = ({ projects, onFileSelect, className = '' }) => {
+const Sidebar = ({ projects, onFilePreload, onFileSelect, className = '' }) => {
   const [openProjectIds, setOpenProjectIds] = useState(new Set());
   const projectCount = projects.length;
   const projectGroups = useMemo(() => {
@@ -41,6 +42,20 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
     });
   }, []);
 
+  useEffect(() => {
+    const preloadSummaries = () => {
+      projects.forEach((project) => preloadCodeFile(project, 'README.txt'));
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleCallbackId = window.requestIdleCallback(preloadSummaries, { timeout: 2000 });
+      return () => window.cancelIdleCallback(idleCallbackId);
+    }
+
+    const timeoutId = window.setTimeout(preloadSummaries, 1000);
+    return () => window.clearTimeout(timeoutId);
+  }, [projects]);
+
   return (
     <div
       className={`pearl-subpanel p-3 h-[20rem] md:h-[clamp(18rem,42vh,26rem)] flex flex-col min-h-0 ${className}`}
@@ -66,6 +81,7 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
                 project={project}
                 isOpen={openProjectIds.has(project.id)}
                 onToggle={handleFolderToggle}
+                onFilePreload={onFilePreload}
                 onFileSelect={onFileSelect}
               />
             ))}
@@ -76,4 +92,4 @@ const Sidebar = ({ projects, onFileSelect, className = '' }) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

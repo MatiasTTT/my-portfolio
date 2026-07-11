@@ -18,18 +18,20 @@ const FileViewerFallback = () => (
 );
 
 const App = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selection, setSelection] = useState(null);
 
-  const handleFileSelect = useCallback((project, file) => {
+  const handleFilePreload = useCallback((project, file) => {
+    loadFileViewer();
     preloadCodeFile(project, file);
-    setSelectedProject(project);
-    setSelectedFile(file);
   }, []);
 
+  const handleFileSelect = useCallback((project, file) => {
+    handleFilePreload(project, file);
+    setSelection({ project, file });
+  }, [handleFilePreload]);
+
   const handleFileClose = useCallback(() => {
-    setSelectedFile(null);
-    setSelectedProject(null);
+    setSelection(null);
   }, []);
 
   useEffect(() => {
@@ -56,16 +58,7 @@ const App = () => {
       {/* Right Section - File Viewer */}
       <main className="flex-1 p-1 md:p-0 min-w-0">
         <div className="md:sticky md:top-4 md:h-[calc(100vh-2rem)]">
-          {selectedFile ? (
-            <Suspense fallback={<FileViewerFallback />}>
-              <FileViewer
-                key={`${selectedProject.id}:${selectedFile}`}
-                file={selectedFile}
-                project={selectedProject}
-                onClose={handleFileClose}
-              />
-            </Suspense>
-          ) : (
+          <div className={selection ? 'hidden' : 'h-full'}>
             <div className="pearl-panel min-h-[320px] md:h-full p-4 md:p-5">
               <div className="h-full flex flex-col gap-4 md:gap-5">
                 <div className="text-center flex justify-center">
@@ -77,6 +70,7 @@ const App = () => {
                 <div className="flex-1 min-h-0 flex flex-col gap-3 md:gap-4">
                   <Sidebar
                     projects={projects}
+                    onFilePreload={handleFilePreload}
                     onFileSelect={handleFileSelect}
                     className="h-[20rem] md:flex-1 md:h-full"
                   />
@@ -111,6 +105,16 @@ const App = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {selection && (
+            <Suspense fallback={<FileViewerFallback />}>
+              <FileViewer
+                file={selection.file}
+                project={selection.project}
+                onClose={handleFileClose}
+              />
+            </Suspense>
           )}
         </div>
       </main>

@@ -16,9 +16,21 @@ const languagesByExtension = {
   py: 'python',
 };
 
+const highlightedCodeCache = new Map();
+
+function highlightCode(cacheKey, code, grammar, language) {
+  if (!grammar || !code) return '';
+
+  const cachedCode = highlightedCodeCache.get(cacheKey);
+  if (cachedCode?.source === code) return cachedCode.markup;
+
+  const highlightedCode = Prism.highlight(code, grammar, language);
+  highlightedCodeCache.set(cacheKey, { source: code, markup: highlightedCode });
+  return highlightedCode;
+}
+
 export default function FileViewer({ file, project, onClose }) {
   const [code, setCode] = useState('');
-  const [highlightedCode, setHighlightedCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const ext = file.split('.').pop().toLowerCase();
   const language = languagesByExtension[ext] || 'none';
@@ -45,25 +57,10 @@ export default function FileViewer({ file, project, onClose }) {
   }, [file, project]);
 
   const grammar = useMemo(() => Prism.languages[language], [language]);
-
-  useEffect(() => {
-    if (!grammar || !code) {
-      setHighlightedCode('');
-      return undefined;
-    }
-
-    const highlight = () => {
-      setHighlightedCode(Prism.highlight(code, grammar, language));
-    };
-
-    if ('requestIdleCallback' in window) {
-      const idleCallbackId = window.requestIdleCallback(highlight, { timeout: 100 });
-      return () => window.cancelIdleCallback(idleCallbackId);
-    }
-
-    const timeoutId = window.setTimeout(highlight, 0);
-    return () => window.clearTimeout(timeoutId);
-  }, [code, grammar, language]);
+  const highlightedCode = useMemo(
+    () => highlightCode(`${project.id}:${file}`, code, grammar, language),
+    [code, file, grammar, language, project.id]
+  );
 
   const displayedCode = useMemo(() => {
     if (isLoading) return 'Loading file...';
